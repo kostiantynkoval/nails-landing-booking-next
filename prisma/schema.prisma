@@ -1,0 +1,111 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Role {
+  CLIENT
+  TECHNICIAN
+  ADMIN
+}
+
+enum AppointmentStatus {
+  PENDING
+  CONFIRMED
+  CANCELLED
+  COMPLETED
+}
+
+model User {
+  id            String        @id @default(uuid())
+  email         String        @unique
+  name          String
+  passwordHash  String
+  role          Role          @default(CLIENT)
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  // Relations
+  appointments  Appointment[] @relation("ClientAppointments")
+  technicianProfile TechnicianProfile?
+}
+
+model TechnicianProfile {
+  id           String        @id @default(uuid())
+  userId       String        @unique
+  bio          String?
+  specialties  String[]      // e.g., ["Nail Art", "Gel Extensions", "Pedicure"]
+
+  // Relations
+  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  appointments Appointment[]
+  workingHours WorkingHours[]
+  breakTimes   BreakTime[]
+}
+
+model Service {
+  id          String        @id @default(uuid())
+  name        String
+  description String?
+  durationMin Int           // Duration in minutes (e.g., 45, 60, 90)
+  price       Decimal       @db.Decimal(10, 2)
+  isActive    Boolean       @default(true)
+
+  // Relations
+  appointments Appointment[]
+}
+
+model Appointment {
+  id           String            @id @default(uuid())
+  clientId     String
+  technicianId String
+  serviceId    String
+  startTime    DateTime          // UTC timestamp of appointment start
+  endTime      DateTime          // UTC timestamp calculated by adding service duration
+  status       AppointmentStatus @default(PENDING)
+  notes        String?
+  createdAt    DateTime          @default(now())
+  updatedAt    DateTime          @updatedAt
+
+  // Relations
+  client       User              @relation("ClientAppointments", fields: [clientId], references: [id])
+  technician   TechnicianProfile @relation(fields: [technicianId], references: [id])
+  service      Service           @relation(fields: [serviceId], references: [id])
+
+  @@index([technicianId, startTime, endTime]) // Crucial index for double-booking queries
+  @@index([startTime])
+}
+
+model WorkingHours {
+  id           String            @id @default(uuid())
+  technicianId String
+  dayOfWeek    Int               // 0 (Sunday) to 6 (Saturday)
+  openTime     String            // Format: "HH:MM" (e.g., "09:00")
+  closeTime    String            // Format: "HH:MM" (e.g., "17:00")
+
+  // Relations
+  technician   TechnicianProfile @relation(fields: [technicianId], references: [id], onDelete: Cascade)
+
+  @@unique([technicianId, dayOfWeek]) // One schedule config per technician per day
+}
+
+model BreakTime {
+  id           String            @id @default(uuid())
+  technicianId String
+  startTime    DateTime          // Specific date-time window for time-off or lunch
+  endTime      DateTime
+
+  // Relations
+  technician   TechnicianProfile @relation(fields: [technicianId], references: [id], onDelete: Cascade)
+
+  @@index([technicianId, startTime, endTime])
+}
