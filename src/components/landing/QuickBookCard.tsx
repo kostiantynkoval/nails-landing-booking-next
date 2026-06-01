@@ -2,10 +2,14 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { salonServices } from "@/data/salon-services";
+import type { ServiceItem } from "@/services/booking/types";
 
-export function QuickBookCard() {
-  const [serviceId, setServiceId] = useState(salonServices[1]?.id ?? "");
+type QuickBookCardProps = {
+  services: ServiceItem[];
+};
+
+export function QuickBookCard({ services }: QuickBookCardProps) {
+  const [serviceId, setServiceId] = useState(services[0]?.id ?? "");
 
   const params = new URLSearchParams({ service: serviceId });
   const bookUrl = `/book?${params.toString()}`;
@@ -37,7 +41,7 @@ export function QuickBookCard() {
               onChange={(e) => setServiceId(e.target.value)}
               className="mt-1 w-full rounded-lg border border-[var(--border)] bg-[var(--bg-primary)] px-3 py-2 text-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]"
             >
-              {salonServices.map((s) => (
+              {services.map((s) => (
                 <option key={s.id} value={s.id}>
                   {s.name}
                 </option>

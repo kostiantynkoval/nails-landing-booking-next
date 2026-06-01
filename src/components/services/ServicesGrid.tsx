@@ -1,9 +1,9 @@
 import Link from "next/link";
-import type { SalonService } from "@/data/salon-services";
 import { formatPrice } from "@/lib/utils";
+import type { ServiceItem } from "@/services/booking/types";
 
 type ServicesGridProps = {
-  services: SalonService[];
+  services: ServiceItem[];
 };
 
 export function ServicesGrid({ services }: ServicesGridProps) {
@@ -16,7 +16,7 @@ export function ServicesGrid({ services }: ServicesGridProps) {
               {service.name}
             </h3>
             <p className="mt-2 flex-1 text-sm text-[var(--text-muted)]">
-              {service.description}
+              {service.description ?? ""}
             </p>
             <dl className="mt-4 flex gap-4 text-sm">
               <div>

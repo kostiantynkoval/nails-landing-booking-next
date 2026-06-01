@@ -1,8 +1,8 @@
-import type { SalonService } from "@/data/salon-services";
 import { formatPrice } from "@/lib/utils";
+import type { ServiceItem } from "@/services/booking/types";
 
 type PricingTableProps = {
-  services: SalonService[];
+  services: ServiceItem[];
 };
 
 export function PricingTable({ services }: PricingTableProps) {

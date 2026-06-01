@@ -3,14 +3,16 @@ import Link from "next/link";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { PricingTable } from "@/components/services/PricingTable";
 import { ServicesGrid } from "@/components/services/ServicesGrid";
-import { salonServices } from "@/data/salon-services";
+import { bookingService } from "@/services/booking/BookingService";
 
 export const metadata: Metadata = {
   title: "Services & Pricing",
   description: "Browse manicure, pedicure, nail art services and transparent pricing.",
 };
 
-export default function ServicesPage() {
+export default async function ServicesPage() {
+  const services = await bookingService.getServices();
+
   return (
     <main id="main-content">
       <PageHeader
@@ -22,7 +24,7 @@ export default function ServicesPage() {
           Our services
         </h2>
         <div className="mt-8">
-          <ServicesGrid services={salonServices} />
+          <ServicesGrid services={services} />
         </div>
       </section>
       <section
@@ -36,7 +38,7 @@ export default function ServicesPage() {
           Final price may vary for add-ons and custom art — confirmed at booking.
         </p>
         <div className="mt-6">
-          <PricingTable services={salonServices} />
+          <PricingTable services={services} />
         </div>
         <p className="mt-8 text-center">
           <Link
