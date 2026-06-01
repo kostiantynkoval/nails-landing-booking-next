@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { BOOKING_STEPS, buildBookUrl } from "@/lib/booking-wizard";
 import type { ServiceItem } from "@/services/booking/types";
 
 type QuickBookCardProps = {
@@ -11,9 +12,10 @@ type QuickBookCardProps = {
 export function QuickBookCard({ services }: QuickBookCardProps) {
   const [serviceId, setServiceId] = useState(services[0]?.id ?? "");
 
-  const params = new URLSearchParams({ service: serviceId });
-  const bookUrl = `/book?${params.toString()}`;
-  const loginUrl = `/login?callbackUrl=${encodeURIComponent(bookUrl)}`;
+  const bookUrl = buildBookUrl({
+    step: BOOKING_STEPS.technician,
+    service: serviceId,
+  });
 
   return (
     <section
@@ -28,7 +30,7 @@ export function QuickBookCard({ services }: QuickBookCardProps) {
           Quick book
         </h2>
         <p className="mt-2 text-sm text-[var(--text-muted)]">
-          Choose a service to continue — sign in required to complete booking.
+          Choose a service to continue. Sign in is required if you are not already logged in.
         </p>
         <form className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3" onSubmit={(e) => e.preventDefault()}>
           <div className="sm:col-span-2 lg:col-span-1">
@@ -50,7 +52,7 @@ export function QuickBookCard({ services }: QuickBookCardProps) {
           </div>
           <div className="flex items-end">
             <Link
-              href={loginUrl}
+              href={bookUrl}
               className="inline-flex w-full items-center justify-center rounded-full bg-[var(--accent)] px-6 py-3 text-sm font-semibold text-[var(--accent-contrast)] hover:opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]"
             >
               Continue booking

@@ -33,7 +33,7 @@ export function ServicesGrid({ services }: ServicesGridProps) {
               </div>
             </dl>
             <Link
-              href={`/login?callbackUrl=${encodeURIComponent(`/book?service=${service.id}`)}`}
+              href={`/book?step=2&service=${service.id}`}
               className="mt-4 text-sm font-semibold text-[var(--accent)] hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]"
             >
               Book this service

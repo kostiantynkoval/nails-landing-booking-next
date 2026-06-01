@@ -42,7 +42,7 @@ export default async function ServicesPage() {
         </div>
         <p className="mt-8 text-center">
           <Link
-            href="/login?callbackUrl=/book"
+            href="/book"
             className="inline-flex rounded-full bg-[var(--accent)] px-6 py-3 text-sm font-semibold text-[var(--accent-contrast)] hover:opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]"
           >
             Book an appointment
