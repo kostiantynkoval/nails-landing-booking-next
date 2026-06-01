@@ -1,3 +1,5 @@
+"use client";
+
 import { useTheme, type Theme } from "./ThemeProvider";
 
 const options: { value: Theme; label: string }[] = [
