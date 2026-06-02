@@ -43,7 +43,7 @@ export function HeroSection() {
           aria-hidden="true"
         >
           <div className="absolute inset-0 flex items-center justify-center font-serif text-2xl text-[var(--accent)]">
-            <Image loading="lazy" src="/images/portfolio/logo_orange.jpg" alt="Maiia Nails" width={731} height={631} />
+            <Image loading="eager" src="/images/portfolio/logo_orange.jpg" alt="Maiia Nails" width={731} height={631} />
           </div>
         </div>
       </div>
